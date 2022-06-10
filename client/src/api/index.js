@@ -1,17 +1,23 @@
 import axios from 'axios';
+const API = axios.create({baseURL : "http://localhost:5000"}); 
 
-const url = 'http://localhost:5000/post';
+API.interceptors.request.use((req)=>{
+    const logProfile=localStorage.getItem('profile');
+    if(logProfile)
+    {
+        req.headers.Authorization = `HoneySingh ${JSON.parse(logProfile).token}`; 
+    }
+    return req;
+});
 
-export const fetchPosts = () => axios.get(url); 
-// as our url return all posts that are present in our database
-
-export const createPost = (newPost) => axios.post(url, newPost);
-
-// api call for our update post routes
+export const fetchPosts = () => API.get('/post'); 
+// as our url return all post {getRequest} that are present in our database
+export const createPost = (newPost) => API.post('/post', newPost);
 export const updatePost = (id,updatedPost) => {
-    return axios.patch(`${url}/${id}`,updatedPost);
+    return API.patch(`/post/${id}`,updatedPost);
 }
+export const deletePost = (id)=> API.delete(`/post/${id}`);
+export const likePost = (id) => API.patch(`/post/${id}/likePost`);
 
-export const deletePost = (id)=> axios.delete(`${url}/${id}`);
-
-export const likePost = (id) => axios.patch(`${url}/${id}/likePost`);
+export const signIn = (formData) => API.post('/user/signin', formData);
+export const signUp = (formData) => API.post('/user/signup', formData);

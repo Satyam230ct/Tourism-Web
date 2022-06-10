@@ -4,16 +4,18 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import postRoutes from './routes/posts.js';
+import userRoutes from './routes/users.js';
 
 const app = express();
 dotenv.config();
-
+ 
 // sending some images which can be large in size so setting limit
 app.use(bodyParser.json({limit:"30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit:"30mb", extended:true})); 
 app.use(cors());
 
 app.use('/post',postRoutes); // Have to use before cors
+app.use('/user',userRoutes);
 
 const PORT = process.env.PORT || 5000;
 
